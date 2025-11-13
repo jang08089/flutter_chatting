@@ -16,3 +16,6 @@ abstract class Profile with _$Profile {
 
   factory Profile.fromJson(Map<String, Object?> json) => _$ProfileFromJson(json);
 }
+DateTime _convertToDateTime(String timeString){
+  return DateTime.parse(timeString);
+}
