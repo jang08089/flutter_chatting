@@ -10,7 +10,7 @@ abstract class Profile with _$Profile {
     @JsonKey(name: 'is_male') required bool isMale,
     required String sport,
     required String location,
-    required String createdAt,
+    required DateTime createdAt,
     
   }) = _Profile;
 

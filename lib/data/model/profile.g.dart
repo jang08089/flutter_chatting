@@ -11,7 +11,7 @@ _Profile _$ProfileFromJson(Map<String, dynamic> json) => _Profile(
   isMale: json['is_male'] as bool,
   sport: json['sport'] as String,
   location: json['location'] as String,
-  createdAt: json['createdAt'] as String,
+  createdAt: DateTime.parse(json['createdAt'] as String),
 );
 
 Map<String, dynamic> _$ProfileToJson(_Profile instance) => <String, dynamic>{
@@ -19,5 +19,5 @@ Map<String, dynamic> _$ProfileToJson(_Profile instance) => <String, dynamic>{
   'is_male': instance.isMale,
   'sport': instance.sport,
   'location': instance.location,
-  'createdAt': instance.createdAt,
+  'createdAt': instance.createdAt.toIso8601String(),
 };
