@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatting/ui/chat_page/view/chat_page.dart';
+import 'package:flutter_chatting/ui/chatlist_page/view/chat_list_view.dart';
 
 void main() {
   runApp(const MyApp());
