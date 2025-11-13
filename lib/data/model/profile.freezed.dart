@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Profile {
 
- String get nickname;@JsonKey(name: 'is_male') bool get isMale; String get sport; String get location; DateTime get createdAt;
+ String get nickname;@JsonKey(name: 'is_male') bool get isMale; String get sport; String get location;@JsonKey(name: 'created_at') DateTime get createdAt;
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ProfileCopyWith<$Res>  {
   factory $ProfileCopyWith(Profile value, $Res Function(Profile) _then) = _$ProfileCopyWithImpl;
 @useResult
 $Res call({
- String nickname,@JsonKey(name: 'is_male') bool isMale, String sport, String location, DateTime createdAt
+ String nickname,@JsonKey(name: 'is_male') bool isMale, String sport, String location,@JsonKey(name: 'created_at') DateTime createdAt
 });
 
 
@@ -157,7 +157,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String nickname, @JsonKey(name: 'is_male')  bool isMale,  String sport,  String location,  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String nickname, @JsonKey(name: 'is_male')  bool isMale,  String sport,  String location, @JsonKey(name: 'created_at')  DateTime createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Profile() when $default != null:
 return $default(_that.nickname,_that.isMale,_that.sport,_that.location,_that.createdAt);case _:
@@ -178,7 +178,7 @@ return $default(_that.nickname,_that.isMale,_that.sport,_that.location,_that.cre
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String nickname, @JsonKey(name: 'is_male')  bool isMale,  String sport,  String location,  DateTime createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String nickname, @JsonKey(name: 'is_male')  bool isMale,  String sport,  String location, @JsonKey(name: 'created_at')  DateTime createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Profile():
 return $default(_that.nickname,_that.isMale,_that.sport,_that.location,_that.createdAt);case _:
@@ -198,7 +198,7 @@ return $default(_that.nickname,_that.isMale,_that.sport,_that.location,_that.cre
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String nickname, @JsonKey(name: 'is_male')  bool isMale,  String sport,  String location,  DateTime createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String nickname, @JsonKey(name: 'is_male')  bool isMale,  String sport,  String location, @JsonKey(name: 'created_at')  DateTime createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Profile() when $default != null:
 return $default(_that.nickname,_that.isMale,_that.sport,_that.location,_that.createdAt);case _:
@@ -213,14 +213,14 @@ return $default(_that.nickname,_that.isMale,_that.sport,_that.location,_that.cre
 @JsonSerializable()
 
 class _Profile implements Profile {
-  const _Profile({required this.nickname, @JsonKey(name: 'is_male') required this.isMale, required this.sport, required this.location, required this.createdAt});
+  const _Profile({required this.nickname, @JsonKey(name: 'is_male') required this.isMale, required this.sport, required this.location, @JsonKey(name: 'created_at') required this.createdAt});
   factory _Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
 
 @override final  String nickname;
 @override@JsonKey(name: 'is_male') final  bool isMale;
 @override final  String sport;
 @override final  String location;
-@override final  DateTime createdAt;
+@override@JsonKey(name: 'created_at') final  DateTime createdAt;
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
@@ -255,7 +255,7 @@ abstract mixin class _$ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
   factory _$ProfileCopyWith(_Profile value, $Res Function(_Profile) _then) = __$ProfileCopyWithImpl;
 @override @useResult
 $Res call({
- String nickname,@JsonKey(name: 'is_male') bool isMale, String sport, String location, DateTime createdAt
+ String nickname,@JsonKey(name: 'is_male') bool isMale, String sport, String location,@JsonKey(name: 'created_at') DateTime createdAt
 });
 
 
