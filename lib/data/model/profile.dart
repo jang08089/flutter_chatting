@@ -7,10 +7,11 @@ part 'profile.g.dart';
 abstract class Profile with _$Profile {
   const factory Profile({
     required String nickname,
-    required bool ismale,
+    @JsonKey(name: 'is_male') required bool isMale,
     required String sport,
     required String location,
     required String createdAt,
+    
   }) = _Profile;
 
   factory Profile.fromJson(Map<String, Object?> json) => _$ProfileFromJson(json);

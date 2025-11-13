@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Profile {
 
- String get nickname; bool get ismale; String get sport; String get location; String get createdAt;
+ String get nickname;@JsonKey(name: 'is_male') bool get isMale; String get sport; String get location; String get createdAt;
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ProfileCopyWith<Profile> get copyWith => _$ProfileCopyWithImpl<Profile>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.ismale, ismale) || other.ismale == ismale)&&(identical(other.sport, sport) || other.sport == sport)&&(identical(other.location, location) || other.location == location)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.isMale, isMale) || other.isMale == isMale)&&(identical(other.sport, sport) || other.sport == sport)&&(identical(other.location, location) || other.location == location)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,nickname,ismale,sport,location,createdAt);
+int get hashCode => Object.hash(runtimeType,nickname,isMale,sport,location,createdAt);
 
 @override
 String toString() {
-  return 'Profile(nickname: $nickname, ismale: $ismale, sport: $sport, location: $location, createdAt: $createdAt)';
+  return 'Profile(nickname: $nickname, isMale: $isMale, sport: $sport, location: $location, createdAt: $createdAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ProfileCopyWith<$Res>  {
   factory $ProfileCopyWith(Profile value, $Res Function(Profile) _then) = _$ProfileCopyWithImpl;
 @useResult
 $Res call({
- String nickname, bool ismale, String sport, String location, String createdAt
+ String nickname,@JsonKey(name: 'is_male') bool isMale, String sport, String location, String createdAt
 });
 
 
@@ -65,10 +65,10 @@ class _$ProfileCopyWithImpl<$Res>
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? nickname = null,Object? ismale = null,Object? sport = null,Object? location = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? nickname = null,Object? isMale = null,Object? sport = null,Object? location = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
-as String,ismale: null == ismale ? _self.ismale : ismale // ignore: cast_nullable_to_non_nullable
+as String,isMale: null == isMale ? _self.isMale : isMale // ignore: cast_nullable_to_non_nullable
 as bool,sport: null == sport ? _self.sport : sport // ignore: cast_nullable_to_non_nullable
 as String,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
@@ -157,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String nickname,  bool ismale,  String sport,  String location,  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String nickname, @JsonKey(name: 'is_male')  bool isMale,  String sport,  String location,  String createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Profile() when $default != null:
-return $default(_that.nickname,_that.ismale,_that.sport,_that.location,_that.createdAt);case _:
+return $default(_that.nickname,_that.isMale,_that.sport,_that.location,_that.createdAt);case _:
   return orElse();
 
 }
@@ -178,10 +178,10 @@ return $default(_that.nickname,_that.ismale,_that.sport,_that.location,_that.cre
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String nickname,  bool ismale,  String sport,  String location,  String createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String nickname, @JsonKey(name: 'is_male')  bool isMale,  String sport,  String location,  String createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _Profile():
-return $default(_that.nickname,_that.ismale,_that.sport,_that.location,_that.createdAt);case _:
+return $default(_that.nickname,_that.isMale,_that.sport,_that.location,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +198,10 @@ return $default(_that.nickname,_that.ismale,_that.sport,_that.location,_that.cre
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String nickname,  bool ismale,  String sport,  String location,  String createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String nickname, @JsonKey(name: 'is_male')  bool isMale,  String sport,  String location,  String createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Profile() when $default != null:
-return $default(_that.nickname,_that.ismale,_that.sport,_that.location,_that.createdAt);case _:
+return $default(_that.nickname,_that.isMale,_that.sport,_that.location,_that.createdAt);case _:
   return null;
 
 }
@@ -213,11 +213,11 @@ return $default(_that.nickname,_that.ismale,_that.sport,_that.location,_that.cre
 @JsonSerializable()
 
 class _Profile implements Profile {
-  const _Profile({required this.nickname, required this.ismale, required this.sport, required this.location, required this.createdAt});
+  const _Profile({required this.nickname, @JsonKey(name: 'is_male') required this.isMale, required this.sport, required this.location, required this.createdAt});
   factory _Profile.fromJson(Map<String, dynamic> json) => _$ProfileFromJson(json);
 
 @override final  String nickname;
-@override final  bool ismale;
+@override@JsonKey(name: 'is_male') final  bool isMale;
 @override final  String sport;
 @override final  String location;
 @override final  String createdAt;
@@ -235,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Profile&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.ismale, ismale) || other.ismale == ismale)&&(identical(other.sport, sport) || other.sport == sport)&&(identical(other.location, location) || other.location == location)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Profile&&(identical(other.nickname, nickname) || other.nickname == nickname)&&(identical(other.isMale, isMale) || other.isMale == isMale)&&(identical(other.sport, sport) || other.sport == sport)&&(identical(other.location, location) || other.location == location)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,nickname,ismale,sport,location,createdAt);
+int get hashCode => Object.hash(runtimeType,nickname,isMale,sport,location,createdAt);
 
 @override
 String toString() {
-  return 'Profile(nickname: $nickname, ismale: $ismale, sport: $sport, location: $location, createdAt: $createdAt)';
+  return 'Profile(nickname: $nickname, isMale: $isMale, sport: $sport, location: $location, createdAt: $createdAt)';
 }
 
 
@@ -255,7 +255,7 @@ abstract mixin class _$ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
   factory _$ProfileCopyWith(_Profile value, $Res Function(_Profile) _then) = __$ProfileCopyWithImpl;
 @override @useResult
 $Res call({
- String nickname, bool ismale, String sport, String location, String createdAt
+ String nickname,@JsonKey(name: 'is_male') bool isMale, String sport, String location, String createdAt
 });
 
 
@@ -272,10 +272,10 @@ class __$ProfileCopyWithImpl<$Res>
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? nickname = null,Object? ismale = null,Object? sport = null,Object? location = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? nickname = null,Object? isMale = null,Object? sport = null,Object? location = null,Object? createdAt = null,}) {
   return _then(_Profile(
 nickname: null == nickname ? _self.nickname : nickname // ignore: cast_nullable_to_non_nullable
-as String,ismale: null == ismale ? _self.ismale : ismale // ignore: cast_nullable_to_non_nullable
+as String,isMale: null == isMale ? _self.isMale : isMale // ignore: cast_nullable_to_non_nullable
 as bool,sport: null == sport ? _self.sport : sport // ignore: cast_nullable_to_non_nullable
 as String,location: null == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
