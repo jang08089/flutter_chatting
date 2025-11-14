@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chatting/widgets/Icons/female_icon.dart';
+import 'package:flutter_chatting/widgets/Icons/male_icon.dart';
 
 class Userbox extends StatelessWidget{
   const Userbox({super.key});
@@ -9,10 +12,11 @@ class Userbox extends StatelessWidget{
       width: double.infinity,
       height: 80,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("닉네임"),
-          Icon(Icons.woman),
-          Text("헬스")
+          Text("닉네임",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+          MaleIcon(size: 20),
+          Expanded(child: Text("헬스"))
         ],
       ),
     );
