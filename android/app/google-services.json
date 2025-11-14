@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "534599225600",
+    "project_id": "health-mate2-c34d7",
+    "storage_bucket": "health-mate2-c34d7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534599225600:android:479d98d4a6cc15349863e5",
+        "android_client_info": {
+          "package_name": "com.sparta.flutter_chatting"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-xgFlc1Tfi24LGUmtCYKEOB1P2IgNPTo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
