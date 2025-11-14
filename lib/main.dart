@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatting/ui/chatlist_page/view/chat_list_view.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_chatting/ui/root_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -11,12 +14,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-       
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: ChatPage()
+      debugShowCheckedModeBanner: false,
+      title: '헬스메이트',
+      home: const RootPage(), // ✅ 여기서 프로필 유무 보고 분기
     );
   }
 }
