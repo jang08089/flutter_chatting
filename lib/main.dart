@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_chatting/ui/chatlist_page/view/chat_list_view.dart';
+import 'package:flutter_chatting/firebase_options.dart';
 import 'package:flutter_chatting/ui/root_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
 
@@ -17,8 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '헬스메이트',
-      home: ChatListPage(), // ✅ 여기서 프로필 유무 보고 분기
+      home: RootPage(), // ✅ 여기서 프로필 유무 보고 분기
     );
   }
 }
-
