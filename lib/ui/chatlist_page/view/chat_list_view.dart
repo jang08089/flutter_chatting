@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chatting/data/model/profile.dart';
 import 'package:flutter_chatting/utils/device_id.dart';
+import 'package:flutter_chatting/widgets/profile_box.dart';
 import 'package:flutter_chatting/widgets/userbox.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -49,7 +51,6 @@ class _ChatListPageState extends State<ChatListPage> {
         title: Text(
           "채팅 목록",
           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 24),
-          
         ),
         centerTitle: true,
         actions: [
@@ -60,15 +61,27 @@ class _ChatListPageState extends State<ChatListPage> {
           SizedBox(width: 10),
         ],
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.only(bottom: 150),
-        itemBuilder: (context, index) {
-          return const Userbox();
-        },
-        separatorBuilder: (context, index) {
-          return const Divider(indent: 15, endIndent: 15);
-        },
-        itemCount: 10,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: ListView.separated(
+          padding: const EdgeInsets.only(bottom: 150),
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onTap: () {
+               
+              },
+              child: ProfileBox(
+                nickname: '아이조아',
+                isMale: false,
+                sport: '헬스',
+              ),
+            );
+          },
+          separatorBuilder: (context, index) {
+            return const Divider(indent: 5, endIndent: 5);
+          },
+          itemCount: 10,
+        ),
       ),
     );
   }
