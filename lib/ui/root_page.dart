@@ -51,7 +51,7 @@ class RootPage extends StatelessWidget {
         }
 
         // ❌ 프로필 없으면 프로필 작성 화면
-        return const ProfilePageView(); // 처음 닉네임/운동/주소 입력하는 화면
+        return ProfilePageView(); // 처음 닉네임/운동/주소 입력하는 화면
       },
     );
   }

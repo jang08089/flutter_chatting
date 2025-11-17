@@ -1,92 +1,177 @@
+
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_chatting/utils/device_id.dart';
+import 'package:flutter_chatting/ui/profile_page/view/location_Page.dart';
 
 class ProfilePageView extends StatefulWidget {
-  const ProfilePageView({super.key});
-
   @override
   State<ProfilePageView> createState() => _ProfilePageViewState();
 }
 
 class _ProfilePageViewState extends State<ProfilePageView> {
-  bool _saving = true;
-  String? _deviceId;
-  String? _error;
+  String? nickname;
+  String? gender;
+  String? exercise;
 
-  @override
-  void initState() {
-    super.initState();
-    _saveDummyProfile(); // 화면 들어오자마자 실행
-  }
-
-  Future<void> _saveDummyProfile() async {
-    try {
-      final deviceId = await getDeviceId();
-      _deviceId = deviceId;
-
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(deviceId)
-          .set({
-        'nickname': '테스트유저',
-        'is_male': true,
-        'sport': '헬스',
-        'full_nm': '서울특별시 강동구 천호동',
-        'emd_cd': '11110101',
-        'created_at': DateTime.now().toIso8601String(), // String으로 저장
-      }, SetOptions(merge: true)); // 있으면 병합, 없으면 생성
-
-      setState(() {
-        _saving = false;
-      });
-
-      debugPrint('🔥 ProfilePageView: users/$deviceId 더미 프로필 저장 완료');
-    } catch (e) {
-      debugPrint('❌ ProfilePageView: 프로필 저장 오류: $e');
-      setState(() {
-        _saving = false;
-        _error = e.toString();
-      });
-    }
+  
+  bool get isFormValid {////////////////////////////////////시작하기 버튼 활성화 조건
+    return nickname != null &&
+        nickname!.isNotEmpty &&
+        gender != null &&
+        exercise != null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('ProfilePage 테스트'),
-      ),
-      body: Center(
-        child: _saving
-            ? const Column(
-                mainAxisSize: MainAxisSize.min,
+      backgroundColor: Colors.white,
+
+      body: GestureDetector(behavior: HitTestBehavior.translucent,       ///키패드 활성화 반응이 없다........ 
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+        child: SafeArea(
+          
+         
+            //키보드가 올라와서 화면이 좁아질 경우 ,SingleChildScrollView를 사용 
+            child: Container(
+              width: 320,
+              padding: EdgeInsets.only(left: 40),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 12),
-                  Text('파이어베이스에 내 프로필 저장 중...'),
-                ],
-              )
-            : _error != null
-                ? Text('오류 발생: $_error')
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        '여기가 ProfilePageView 입니다!',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      const SizedBox(height: 12),
-                      if (_deviceId != null)
-                        Text(
-                          'deviceId: $_deviceId',
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      const SizedBox(height: 8),
-                      const Text('🔥 더미 프로필이 Firestore에 저장됐어요.'),
-                    ],
+                  Text(
+                    "안녕하세요! 헬스메이트입니다\n프로필을 입력하여 회원가입해주세요",
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   ),
+        
+                  SizedBox(height: 40),
+                  ////////////////////////////////////////////////////////////////////////드롭다운 닉네임, 성별, 운동 
+        
+                  formField(
+                    "닉네임",
+                    TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          nickname = value; // 닉네임
+                        });
+                      },
+        
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                      ),
+                    ),
+                  ),
+        
+                  formField(
+                    "성별",
+                    DropdownButtonFormField(
+                      items: [
+                        DropdownMenuItem(value: "남성", child: Text("남성")),
+                        DropdownMenuItem(value: "여성", child: Text("여성")),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          gender = value; // 성별
+                        });
+                      },
+        
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                      ),
+                    ),
+                  ),
+        
+                  formField(
+                    "운동",
+                    DropdownButtonFormField(
+                      hint: Text("러닝"),
+                      items: [
+                        DropdownMenuItem(value: "러닝", child: Text("러닝")),
+                        DropdownMenuItem(value: "게임", child: Text("게임")),
+                        DropdownMenuItem(value: "헬스", child: Text("헬스")),
+                        DropdownMenuItem(value: "등산", child: Text("등산")),
+                        DropdownMenuItem(value: "자전거", child: Text("자전거")),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          exercise = value; // 운동
+                        });
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                      ),
+                    ),
+                  ),
+               /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////드롭다운 닉네임, 성별, 운동 
+                  SizedBox(height: 20),
+        
+                  LocationPage(   //위치 정보 
+                    onTap: () {
+                      print("위치 정보 클릭!");
+                    },
+                  ),
+        
+                  SizedBox(height: 40),
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 시작하기 버튼 활성화 
+                    SizedBox(
+                        //  시작하기 버튼
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: isFormValid
+                          ? () {
+                              print("다음 페이지로 이동!");    /// Navigator.push 로 수정 해야함 
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            isFormValid ? Colors.black : Colors.grey,
+                      ),
+                      child: Text(
+                        "시작하기",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+         
+                ],
+              ),
+            ),
+          
+        ),
       ),
+    );
+  }
+
+  
+
+  Widget formField(String label, Widget child) {   ////////////////////////// formField 닉네임,성별 ,운동  폼 디자인 공통함수 
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: TextStyle(fontSize: 18)),
+        SizedBox(height: 8),
+        child,
+        SizedBox(height: 24),
+      ],
     );
   }
 }
