@@ -1,18 +1,23 @@
+import 'package:flutter_chatting/data/model/chat_room.dart';
 import 'package:flutter_chatting/data/model/profile.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-//상태 클래스 필요없음
-
-class ChatPageViewModel extends Notifier<List<Profile>> {
-  @override
-  List<Profile> build() {
-    return [];
-  }
-
-  void getChattings() async {}
+class ChatPageState {
+  List<Profile> profiles;
+  List<ChatRoom> chatrooms;
+  ChatPageState({required this.profiles,required this.chatrooms});
 }
 
-final ChatPageViewModelProvider =
-    NotifierProvider<ChatPageViewModel, List<Profile>>(
-      () => ChatPageViewModel(),
-    );
+class ChatPageViewModel extends Notifier<ChatPageState> {
+  @override
+  ChatPageState build() {
+    return ChatPageState(profiles: [], chatrooms: []);
+  }
+ void getChattings() async{
+  
+ }
+
+}
+final ChatPageViewModelProvider = NotifierProvider<ChatPageViewModel,ChatPageState>((){
+  return ChatPageViewModel();
+});
