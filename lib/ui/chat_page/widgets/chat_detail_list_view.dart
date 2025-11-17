@@ -1,70 +1,40 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:flutter_chatting/ui/chat_page/widgets/chat_detail_receive_item.dart';
-import 'package:flutter_chatting/ui/chat_page/widgets/chat_detail_send_item.dart';
-import 'package:flutter_chatting/data/model/chat_messages.dart'; 
+import 'package:flutter_chatting/ui/chat_page/view_model/chat_conversation_view_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ChatDetailListView extends StatelessWidget{
-
-  const ChatDetailListView({
-    super.key,
-    required this.roomId,
-  });
+class ChatDetailListView extends ConsumerWidget {
+  const ChatDetailListView({super.key, required this.roomId});
 
   final String roomId;
 
   @override
-  Widget build(BuildContext context) {
-
-    final children = [
-          ChatDetailReceiveItem(
-            message: ChatMessages(  
-              id: '1',
-              roomId: 'room1',
-              senderId: 'other',
-              content: '안녕하세요',
-              createdAt: DateTime.now(),
-            ),
-          ),
-          ChatDetailReceiveItem(
-            message: ChatMessages(  
-              id: '2',
-              roomId: 'room1',
-              senderId: 'other',
-              content: '어디 헬스장다니세요?',
-              createdAt: DateTime.now(),
-            ),
-          ),
-          ChatDetailSendItem(
-            message: ChatMessages(
-              id: '3',
-              roomId: 'room1',
-              senderId: 'me',  // 내 ID
-              content: '네 안녕하세요',
-              createdAt: DateTime.now(),
-            ),
-          ),
-          ChatDetailSendItem(
-            message: ChatMessages(
-              id: '3',
-              roomId: 'room1',
-              senderId: 'me',  // 내 ID
-              content: '00짐 다녀요',
-              createdAt: DateTime.now(),
-            ),
-          )
-        ];
+  Widget build(BuildContext context, WidgetRef ref) {
+    final messagesAsync = ref.watch(chatMessagesStreamProvider(roomId));
 
     return Expanded(
-      child: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        itemCount: children.length,
-        separatorBuilder:(context, index) => SizedBox(height: 4,),
-        itemBuilder: (context, index) {
-          return children[index];
-        }, 
-      ),  
+      child: messagesAsync.when(
+        data: (messages) {
+          debugPrint('✅ messages count: ${messages.length}');
+          for (var msg in messages) {
+            debugPrint(
+              'Message ID: ${msg.id}, Sender: ${msg.senderId}, Content: ${msg.content}, CreatedAt: ${msg.createdAt}',
+            );
+          }
+          return ListView.builder(
+            itemCount: messages.length,
+            reverse: true,
+            itemBuilder: (context, index) {
+              final msg = messages[index];
+              return ListTile(
+                title: Text(msg.content),
+                subtitle: Text(msg.senderId),
+              );
+            },
+          );
+        },
+        loading: () => Center(child: CircularProgressIndicator()),
+        error: (e, st) => Center(child: Text('Error: $e')),
+      ),
     );
   }
 }
