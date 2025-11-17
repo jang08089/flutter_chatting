@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'health-mate2-c34d7.firebasestorage.app',
     iosBundleId: 'com.sparta.flutterChatting',
   );
-
 }

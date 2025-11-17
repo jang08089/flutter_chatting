@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: '헬스메이트',
-      home: const RootPage(), // ✅ 여기서 프로필 유무 보고 분기
+      home: RootPage(), // ✅ 여기서 프로필 유무 보고 분기
     );
   }
 }
