@@ -11,12 +11,15 @@ class ChatConversationRepository {
         .collection('chat_messages')
         .doc(roomId)
         .collection('messages')
+        .orderBy('created_at', descending: false) // 오래된 것부터 (최신이 아래)
         .snapshots()
         .map((snapshot) {
+          // 스트림 업데이트 확인용 로그
+          debugPrint('🔄 스트림 업데이트! 문서 개수: ${snapshot.docs.length}');
+          
           final messages = snapshot.docs.map((doc) {
             final data = doc.data();
 
-            // 🔹 created_at 타입 안전 처리
             final createdAtValue = data['created_at'];
             DateTime createdAt;
             if (createdAtValue is Timestamp) {
@@ -24,7 +27,7 @@ class ChatConversationRepository {
             } else if (createdAtValue is String) {
               createdAt = DateTime.parse(createdAtValue);
             } else {
-              createdAt = DateTime.now(); // fallback
+              createdAt = DateTime.now();
             }
 
             return ChatMessages(
@@ -36,18 +39,9 @@ class ChatConversationRepository {
             );
           }).toList();
 
-          // 🔹 생성일 기준으로 내림차순 정렬
-          messages.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-          // 🔹 디버깅용 출력
           debugPrint(
             '📨 ChatMessagesStream - roomId: $roomId, messages count: ${messages.length}',
           );
-          for (var msg in messages) {
-            debugPrint(
-              'Message ID: ${msg.id}, Sender: ${msg.senderId}, Content: ${msg.content}, CreatedAt: ${msg.createdAt}',
-            );
-          }
 
           return messages;
         });

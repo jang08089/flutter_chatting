@@ -27,4 +27,24 @@ class ChatDetailRepository {
       throw Exception('ChatRoom 가져오기 오류: $e');
     }
   }
+
+  Future<void> sendMessage({
+    required String roomId,
+    required String senderId,
+    required String content,
+  }) async {
+    final messageRef = await _firestore
+        .collection('chat_messages')
+        .doc(roomId)
+        .collection('messages')
+        .add({  // .add() = 자동 ID 생성 + 저장
+      'room_id': roomId,
+      'sender_id': senderId,
+      'content': content,
+      'created_at': DateTime.now().toIso8601String(),
+    });
+
+    // 생성된 ID는 messageRef.id로 가져올 수 있음
+    debugPrint('✅ 메시지 전송 완료 - ID: ${messageRef.id}');
+  }
 }
