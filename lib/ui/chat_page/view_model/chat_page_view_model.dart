@@ -1,4 +1,5 @@
 import 'package:flutter_chatting/data/repository/chat_detail_repository.dart';
+import 'package:flutter_chatting/utils/device_id.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_chatting/data/model/chat_room.dart';
 
@@ -13,36 +14,60 @@ final chatRoomProvider = FutureProvider.family<ChatRoom?, String>(
   },
 );
 
+//전송 프로바이더
+final sendMessageProvider = Provider.family<Future<void> Function(String), String>(
+  (ref, roomId) {
+    final repository = ref.read(chatRepositoryProvider);
+    
+    // 메시지 전송 함수를 반환
+    return (String content) async {
+      // 1. 내 ID 가져오기
+      final senderId = await getDeviceId();
+      
+      // 2. Repository의 sendMessage 호출
+      await repository.sendMessage(
+        roomId: roomId,
+        senderId: senderId,
+        content: content,
+      );
+    };
+  },
+);
+
 // 상대방 정보 모델 (닉네임, 성별, 운동)
 class OpponentInfo {
   final String? nickname;
-  final String? gender;
+  final bool? isMale;
   final String? sport;
 
   OpponentInfo({
     this.nickname,
-    this.gender,
+    this.isMale,
     this.sport,
   });
 }
 
-// 상대방 정보 Provider (roomId와 opponentId 받기)
-final opponentInfoProvider = FutureProvider.family<OpponentInfo?, ({String roomId, String opponentId})>(
+// 상대방 정보 받기 (앱바에 표시)
+final opponentInfoProvider = FutureProvider.family<
+    OpponentInfo?, ({String roomId, String opponentId})>(
   (ref, params) async {
     final chatRoomAsync = ref.watch(chatRoomProvider(params.roomId));
-    
+
     return chatRoomAsync.when(
       data: (chatRoom) {
         if (chatRoom == null) return null;
-        
-        // member_info에서 상대방 정보 찾기
+
+        // member_info에서 상대방 정보 가져오기
         if (chatRoom.memberInfo.containsKey(params.opponentId)) {
-          final opponentInfo = chatRoom.memberInfo[params.opponentId] as Map<String, dynamic>?;
-          
+          final opponentMap =
+              chatRoom.memberInfo[params.opponentId] as Map<String, dynamic>?;
+
+          if (opponentMap == null) return null;
+
           return OpponentInfo(
-            nickname: opponentInfo?['nickname'] as String?,
-            gender: opponentInfo?['gender'] as String?, // 추후 추가 예정
-            sport: opponentInfo?['sport'] as String?,
+            nickname: opponentMap['nickname'] as String?,
+            isMale: opponentMap['is_male'] as bool?, 
+            sport: opponentMap['sport'] as String?,
           );
         }
         return null;
@@ -51,4 +76,6 @@ final opponentInfoProvider = FutureProvider.family<OpponentInfo?, ({String roomI
       error: (_, __) => null,
     );
   },
+
+  
 );

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_chatting/data/model/chat_messages.dart';
+import 'package:intl/intl.dart';
 
 class ChatDetailSendItem extends StatelessWidget{
 
@@ -10,11 +11,11 @@ class ChatDetailSendItem extends StatelessWidget{
 
   final ChatMessages message;
 
-  // 날짜 포맷팅 함수
-  // String _formatDateTime(DateTime dateTime) {
-  //   final dateFormat = DateFormat('yyyy년 MM월 dd일 a hh:mm', 'ko_KR');
-  //   return dateFormat.format(dateTime);
-  // }
+  //날짜 포맷팅 함수
+  String _formatDateTime(DateTime dateTime) {
+    final dateFormat = DateFormat('yyyy년 MM월 dd일 a hh:mm', 'ko_KR');
+    return dateFormat.format(dateTime);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +34,7 @@ class ChatDetailSendItem extends StatelessWidget{
           ),
         ),
         Text(
-          //_formatDateTime(message.createdAt),
-          message.createdAt.toIso8601String(),
+          _formatDateTime(message.createdAt),
           style: TextStyle(
             fontSize: 11,
             color: Colors.black45,

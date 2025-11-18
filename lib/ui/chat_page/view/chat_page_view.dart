@@ -34,7 +34,7 @@ class ChatPageView extends ConsumerWidget{
         debugPrint('  - roomId: $roomId');
         debugPrint('  - opponentId: $opponentId');
         debugPrint('  - nickname: ${opponentInfo?.nickname}');
-        debugPrint('  - gender: ${opponentInfo?.gender}');
+        debugPrint('  - gender: ${opponentInfo?.isMale}');
         debugPrint('  - sport: ${opponentInfo?.sport}');
         return const SizedBox.shrink(); // UI에는 영향 없음
       },
@@ -58,11 +58,14 @@ class ChatPageView extends ConsumerWidget{
           child: Scaffold(
             appBar: ChatDetailAppBar(
               nickname: opponentInfo?.nickname ?? '알 수 없음',
-              gender: opponentInfo?.gender ?? '모름',
+              gender: (opponentInfo?.isMale == null)
+                ? '모름'
+                : (opponentInfo!.isMale! ? '남자' : '여자'),
               sport: opponentInfo?.sport ?? '모름',
             ),
             bottomSheet: ChatDetailBottomSheet(
               MediaQuery.of(context).padding.bottom,
+              roomId,  // 이 줄 추가 - roomId 전달
             ),
             body: Column(
               children: [
