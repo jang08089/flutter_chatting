@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatting/widgets/Icons/female_icon.dart';
 import 'package:flutter_chatting/widgets/Icons/male_icon.dart';
+import 'package:flutter_chatting/widgets/imagebox.dart';
 
 class ProfileBox extends StatelessWidget {
   const ProfileBox({
@@ -8,25 +9,26 @@ class ProfileBox extends StatelessWidget {
     required this.nickname,
     required this.isMale,
     required this.sport,
+    required this.userId,  // 🔥 추가됨
   });
 
   final String nickname;
   final bool isMale;
   final String sport;
+  final String userId;     // 🔥 추가됨
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 100,
-      decoration: BoxDecoration(
-        
-      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
+              Imagebox(size: 60),
+              SizedBox(width: 20),
               Text(
                 nickname,
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -39,7 +41,6 @@ class ProfileBox extends StatelessWidget {
             spacing: 10,
             children: [
               Spacer(),
-              // 운동
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
@@ -48,7 +49,10 @@ class ProfileBox extends StatelessWidget {
                 height: 25,
                 width: 60,
                 child: Center(
-                  child: Text(sport, style: TextStyle(color: Colors.white)),
+                  child: Text(
+                    sport,
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
             ],
@@ -58,4 +62,3 @@ class ProfileBox extends StatelessWidget {
     );
   }
 }
-
