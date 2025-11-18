@@ -32,3 +32,4 @@ class LocationPage extends StatelessWidget {
     );
   }
 }
+

@@ -1,6 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_chatting/ui/profile_page/view/adress_search_view_model.dart';
+import 'package:flutter_chatting/ui/profile_page/view/geolocator_helper.dart';
 import 'package:flutter_chatting/ui/profile_page/view/location_Page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProfilePageView extends StatefulWidget {
   @override
@@ -19,20 +22,44 @@ class _ProfilePageViewState extends State<ProfilePageView> {
         gender != null &&
         exercise != null;
   }
+  
+
+    Future<void> onSendGeo (WidgetRef ref) async {
+    final pos = await GeolocatorHelper.getposition();
+      print("👉 $pos");
+    if (pos == null) return;
+
+    final lat = pos.latitude;
+    final lng = pos.longitude;
+
+    // ViewModel 호출
+    final notifier = ref.read(addressSearchViewModelProvider.notifier);
+    await notifier.searchByLocation(lat, lng);
+    
+
+    // 상태 확인
+    final result = ref.read(addressSearchViewModelProvider);
+    print("내 주소 결과 👉 $result");
+  }
+    
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){      
+// 1. getpositionr가서 위도 경도를 받아오기 (어떤 변수) 
+    // 2. 받아온 위도 경도를 serachByLocation  여기로 보내기 
+    // 3. serachByLocation 반환하는 값이 full_nm, emd cd , 를 받아오기 어딘가에 저장해둔다.
+    
     return Scaffold(
       backgroundColor: Colors.white,
 
-      body: GestureDetector(behavior: HitTestBehavior.translucent,       ///키패드 활성화 반응이 없다........ 
+      body: GestureDetector(behavior: HitTestBehavior.translucent,       ///키패드 활성화 반응 살림 
       onTap: () {
         FocusScope.of(context).unfocus();
       },
         child: SafeArea(
           
          
-            //키보드가 올라와서 화면이 좁아질 경우 ,SingleChildScrollView를 사용 
+            child: SingleChildScrollView( 
             child: Container(
               width: 320,
               padding: EdgeInsets.only(left: 40),
@@ -123,11 +150,17 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////드롭다운 닉네임, 성별, 운동 
                   SizedBox(height: 20),
         
-                  LocationPage(   //위치 정보 
-                    onTap: () {
-                      print("위치 정보 클릭!");
-                    },
+                  Consumer(
+                    builder: (context, ref, _) {
+                      return LocationPage(   //위치 정보 
+                      onTap: () {
+                        onSendGeo(ref);
+                        print("위치 정보 클릭!"); //
+                      },
+                    );
+                    }
                   ),
+                    
         
                   SizedBox(height: 40),
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 시작하기 버튼 활성화 
@@ -137,8 +170,9 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: isFormValid
-                          ? () {
+                           ? () {
                               print("다음 페이지로 이동!");    /// Navigator.push 로 수정 해야함 
+                              
                             }
                           : null,
                       style: ElevatedButton.styleFrom(
@@ -155,7 +189,7 @@ class _ProfilePageViewState extends State<ProfilePageView> {
                 ],
               ),
             ),
-          
+            ),
         ),
       ),
     );

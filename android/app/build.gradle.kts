@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.sparta.flutter_chatting"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
