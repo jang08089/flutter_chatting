@@ -1,60 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatting/data/model/profile.dart';
 import 'package:flutter_chatting/ui/chat_page/view/chat_page_view.dart';
 import 'package:flutter_chatting/ui/chatlist_page/view/chat_list_view.dart';
 import 'package:flutter_chatting/ui/mainlist_page/view/filtering_dropdown_box.dart';
+import 'package:flutter_chatting/ui/mainlist_page/view_model/mainlist_page_view_model.dart';
 import 'package:flutter_chatting/widgets/profile_box.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class MainListPageView extends StatefulWidget {
+class MainListPageView extends HookConsumerWidget {
   const MainListPageView({super.key});
 
   @override
-  State<MainListPageView> createState() => _MainlistPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 필터링 위한 변수들 (Hooks)
+    final selectedGender = useState<bool?>(null); // null = 성별(전체)
+    final selectedExercise = useState("운동");
 
-class _MainlistPageState extends State<MainListPageView> {
-  // 리스트 (더미 데이터)
-  List<Profile> profiles = [
-    Profile(
-      nickname: "운동조아",
-      isMale: true,
-      sport: "자전거",
-      fullNm: '',
-      emdCd: '',
-      createdAt: DateTime.now(),
-    ),
-    Profile(
-      nickname: "헬스비타민",
-      isMale: false,
-      sport: "헬스",
-      fullNm: '',
-      emdCd: '',
-      createdAt: DateTime.now(),
-    ),
-  ];
-
-  // 필터링 변수
-  bool? selectedGender; // null = 전체, true = 남자, false = 여자
-  String selectedExercise = "운동";
-
-  @override
-  Widget build(BuildContext context) {
-    // 필터링
-    final filtered = profiles
-        .where(
-          (p) =>
-              (selectedGender == null || p.isMale == selectedGender) &&
-              (selectedExercise == "운동" || p.sport == selectedExercise),
-        )
-        .toList();
+    // ViewModel 구독 (RiverPod)
+    final mainVM = ref.watch(mainlistPageViewModelProvider);
+    // final addressVM = ref.watch(addressViewModelProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: SizedBox.shrink(),
-        title: Center(child: Text("부산광역시 동래구 온천동")),
+        // 내 동네 표시
+        // title: addressVM.when(
+        //   data: (address) => Center(child: Text(address ?? "주소 없음")),
+        //   loading: () => Center(child: CircularProgressIndicator()),
+        //   error: (e, st) => Center(child: Text("주소 조회 실패")),
+        // ),
         actions: [
+          // 대화중인 사람 목록으로 이동 버튼
           IconButton(
             icon: Icon(Icons.chat_bubble_outline),
             onPressed: () {
@@ -75,61 +53,82 @@ class _MainlistPageState extends State<MainListPageView> {
               spacing: 20,
               children: [
                 // 성별 필터링 dropdown
-                FilteringDropdownButton<bool?>(
-                  value: selectedGender,
-                  itemsMap: {
-                    null: "성별", // 전체
-                    true: "남자",
-                    false: "여자",
+                FilteringDropdownButton(
+                  value: selectedGender.value == null
+                      ? "성별"
+                      : (selectedGender.value! ? "남자" : "여자"),
+                  itemsList: ["성별", "남자", "여자"],
+                  onChanged: (value) {
+                    if (value == "성별") {
+                      selectedGender.value = null;
+                    } else if (value == "남자") {
+                      selectedGender.value = true;
+                    } else if (value == "여자") {
+                      selectedGender.value = false;
+                    }
                   },
-                  onChanged: (value) => setState(() => selectedGender = value),
                 ),
                 // 운동 필터링 dropdown
-                FilteringDropdownButton<String>(
-                  value: selectedExercise,
-                  itemsMap: {
-                    "운동": "운동",
-                    "러닝": "러닝",
-                    "게임": "게임",
-                    "헬스": "헬스",
-                    "등산": "등산",
-                    "자전거": "자전거",
+                FilteringDropdownButton(
+                  value: selectedExercise.value,
+                  itemsList: ["운동", "러닝", "게임", "헬스", "등산", "자전거"],
+                  onChanged: (value) {
+                    if (value != null) selectedExercise.value = value;
                   },
-                  onChanged: (value) =>
-                      setState(() => selectedExercise = value!),
                 ),
               ],
             ),
-            // 리스트
             Expanded(
-              child: filtered.isEmpty
-                  ? Center(
-                      child: Text(
-                        "조건에 맞는 검색결과가 없습니다",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: filtered.length,
-                      itemBuilder: (context, index) {
-                        final p = filtered[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatPageView(),
+              child: mainVM.when(
+                data: (profiles) {
+                  // 필터링 적용
+                  final filtered = profiles.where((p) {
+                    final genderMatch = selectedGender.value == null
+                        ? true
+                        : (selectedGender.value!
+                              ? p.isMale == true
+                              : p.isMale == false);
+
+                    final sportMatch =
+                        selectedExercise.value == "운동" ||
+                        p.sport == selectedExercise.value;
+                    return genderMatch && sportMatch;
+                  }).toList();
+                  if (filtered.isEmpty) {
+                    return Center(
+                      child: Text("검색결과가 없습니다", style: TextStyle(fontSize: 20)),
+                    );
+                  }
+                  // 나와 같은 동네 + 필터링 된 리스트 화면에 뿌리기
+                  return ListView.builder(
+                    itemCount: filtered.length,
+                    itemBuilder: (context, index) {
+                      final p = filtered[index];
+                      // 목록 탭하면 대화 페이지로 이동
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatPageView(
+                                // profile: filtered[index]
                               ),
-                            );
-                          },
-                          child: ProfileBox(
-                            nickname: p.nickname,
-                            isMale: p.isMale,
-                            sport: p.sport,
-                          ),
-                        );
-                      },
-                    ),
+                            ),
+                          );
+                        },
+                        child: ProfileBox(
+                          nickname: p.nickname,
+                          isMale: p.isMale,
+                          sport: p.sport,
+                          userId: p.id!,
+                        ),
+                      );
+                    },
+                  );
+                },
+                loading: () => Center(child: CircularProgressIndicator()),
+                error: (e, st) => Center(child: Text('Error: $e')),
+              ),
             ),
           ],
         ),
