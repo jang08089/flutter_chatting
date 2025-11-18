@@ -21,5 +21,5 @@ Map<String, dynamic> _$ProfileToJson(_Profile instance) => <String, dynamic>{
   'sport': instance.sport,
   'full_nm': instance.fullNm,
   'emd_cd': instance.emdCd,
-  'created_at': instance.createdAt.toIso8601String(),
+  'created_at': _convertFromDateTime(instance.createdAt),
 };
