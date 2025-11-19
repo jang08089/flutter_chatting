@@ -13,7 +13,8 @@ part of 'mainlist_page_view_model.dart';
 const mainlistPageViewModelProvider = MainlistPageViewModelProvider._();
 
 final class MainlistPageViewModelProvider
-    extends $AsyncNotifierProvider<MainlistPageViewModel, List<Profile>> {
+    extends
+        $AsyncNotifierProvider<MainlistPageViewModel, Map<String, dynamic>> {
   const MainlistPageViewModelProvider._()
     : super(
         from: null,
@@ -34,20 +35,26 @@ final class MainlistPageViewModelProvider
 }
 
 String _$mainlistPageViewModelHash() =>
-    r'ecac434581a08a6c27add5c2b01d5fa302a13e9a';
+    r'a8399626dcb7272d5962ea12074d04a380b0631f';
 
-abstract class _$MainlistPageViewModel extends $AsyncNotifier<List<Profile>> {
-  FutureOr<List<Profile>> build();
+abstract class _$MainlistPageViewModel
+    extends $AsyncNotifier<Map<String, dynamic>> {
+  FutureOr<Map<String, dynamic>> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<List<Profile>>, List<Profile>>;
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<Map<String, dynamic>>, Map<String, dynamic>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<Profile>>, List<Profile>>,
-              AsyncValue<List<Profile>>,
+              AnyNotifier<
+                AsyncValue<Map<String, dynamic>>,
+                Map<String, dynamic>
+              >,
+              AsyncValue<Map<String, dynamic>>,
               Object?,
               Object?
             >;
