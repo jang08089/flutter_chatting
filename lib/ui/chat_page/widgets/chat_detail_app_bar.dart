@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatting/core/app_theme.dart';
-import 'package:flutter_chatting/widgets/Icons/female_icon.dart';
-import 'package:flutter_chatting/widgets/Icons/male_icon.dart';
+import 'package:flutter_chatting/widgets/icons/female_icon.dart';
+import 'package:flutter_chatting/widgets/icons/male_icon.dart';
 
 class ChatDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ChatDetailAppBar({
@@ -31,7 +31,6 @@ class ChatDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(width: 20),
           // 닉네임
           Text(nickname, style: const TextStyle(fontSize: 23)),
           const SizedBox(height: 4),

@@ -22,6 +22,7 @@ class ProfileRepository {
       final snapshot = await firestore
           .collection('users')
           .where('full_nm', isEqualTo: fullNm)
+          .orderBy('createdAt', descending: false)
           .get();
       return snapshot.docs
           .map((doc) => Profile.fromJson(doc.data()).copyWith(id: doc.id))
