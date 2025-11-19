@@ -66,7 +66,7 @@ final opponentInfoProvider = FutureProvider.family<
 
           return OpponentInfo(
             nickname: opponentMap['nickname'] as String?,
-            isMale: opponentMap['is_male'] as bool?, 
+            isMale: opponentMap['isMale'] as bool?, 
             sport: opponentMap['sport'] as String?,
           );
         }

@@ -1,7 +1,9 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter_chatting/data/model/profile.dart';
 import 'package:flutter_chatting/ui/chat_page/view_model/chat_page_view_model.dart';
+import 'package:flutter_chatting/ui/profile_page/view/profile_page_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_chatting/ui/chat_page/widgets/chat_detail_app_bar.dart';
 import 'package:flutter_chatting/ui/chat_page/widgets/chat_detail_bottom_sheet.dart';
@@ -10,21 +12,20 @@ import 'package:flutter_chatting/ui/chat_page/widgets/chat_detail_list_view.dart
 class ChatPageView extends ConsumerWidget{
   const ChatPageView({
     super.key,
-    //required this.roomId,
-    required this.opponentId,
-    this.roomId = 'uid_aaa111_uid_bbb222',  // 테스트
+    required this.opponent,
+    required this.roomId,  // 테스트
     //this.opponentId = 'uid_bbb222',  // 테스트
   });
 
   final String roomId;
-  final String opponentId;
+  final Profile opponent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
     // 상대방 정보 가져오기 (닉네임, 성별, 운동)
     final opponentInfoAsync = ref.watch(
-      opponentInfoProvider((roomId: roomId, opponentId: opponentId)),
+      opponentInfoProvider((roomId: roomId, opponentId: opponent.id!)),
     );
 
     // 디버그 출력
@@ -32,7 +33,7 @@ class ChatPageView extends ConsumerWidget{
       data: (opponentInfo) {
         debugPrint('🔥 ChatPageView - 상대방 정보:');
         debugPrint('  - roomId: $roomId');
-        debugPrint('  - opponentId: $opponentId');
+        debugPrint('  - opponentId: $opponent.id');
         debugPrint('  - nickname: ${opponentInfo?.nickname}');
         debugPrint('  - gender: ${opponentInfo?.isMale}');
         debugPrint('  - sport: ${opponentInfo?.sport}');
@@ -51,11 +52,14 @@ class ChatPageView extends ConsumerWidget{
 
     return opponentInfoAsync.when(
       data: (opponentInfo) {
+      final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+
         return GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
           },
           child: Scaffold(
+            resizeToAvoidBottomInset: false,
             appBar: ChatDetailAppBar(
               nickname: opponentInfo?.nickname ?? '알 수 없음',
               gender: (opponentInfo?.isMale == null)
@@ -63,16 +67,22 @@ class ChatPageView extends ConsumerWidget{
                 : (opponentInfo!.isMale! ? '남자' : '여자'),
               sport: opponentInfo?.sport ?? '모름',
             ),
-            bottomSheet: ChatDetailBottomSheet(
-              MediaQuery.of(context).padding.bottom,
-              roomId,
-            ),
-            body: Column(
-              children: [
-                ChatDetailListView(
-                  roomId: roomId,
-                ),
-              ],
+            body: AnimatedPadding(
+              duration: const Duration(milliseconds: 150),
+              padding: EdgeInsets.only(bottom:keyboardHeight),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ChatDetailListView(
+                      roomId: roomId,
+                    ),
+                  ),
+                  ChatDetailBottomSheet(
+                    MediaQuery.of(context).padding.bottom,
+                    roomId,
+                  ),
+                ],
+              ),
             ),
           ),
         );

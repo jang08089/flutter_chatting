@@ -147,8 +147,8 @@ class MainListPageView extends HookConsumerWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ChatPageView(
+                                opponent: p,
                                 roomId: roomId,
-                                opponentId: p.id,
                                 // me: me,
                                 // opponent: p,
                               ),
