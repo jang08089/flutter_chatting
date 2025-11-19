@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatting/data/model/profile.dart';
 import 'package:flutter_chatting/ui/chat_page/view/chat_page_view.dart';
 import 'package:flutter_chatting/ui/chatlist_page/view/chat_list_view.dart';
 import 'package:flutter_chatting/ui/mainlist_page/view/filtering_dropdown_box.dart';
@@ -14,7 +13,7 @@ class MainListPageView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 필터링 위한 변수들 (Hooks)
-    final selectedGender = useState<bool?>(null); // null = 성별(전체)
+    final selectedGender = useState<bool?>(null); // null = "성별"(전체)
     final selectedExercise = useState("운동");
 
     // ViewModel 구독 (RiverPod)
@@ -25,12 +24,28 @@ class MainListPageView extends HookConsumerWidget {
         leading: SizedBox.shrink(),
         // 내 동네 표시
         title: mainlistVM.when(
-          data: (data) => Center(child: Text(data["fullNm"])),
+          data: (profiles) {
+            return FutureBuilder(
+              future: ref
+                  .read(mainlistPageViewModelProvider.notifier)
+                  .getMyProfile(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError || !snapshot.hasData) {
+                  return Text("주소 조회 실패");
+                } else {
+                  final me = snapshot.data!;
+                  return Center(child: Text(me.fullNm));
+                }
+              },
+            );
+          },
           loading: () => Center(child: CircularProgressIndicator()),
           error: (e, st) => Center(child: Text("주소 조회 실패")),
         ),
         actions: [
-          // 대화중인 사람 목록으로 이동 버튼
+          // 채팅중인 유저 목록으로 이동 버튼
           IconButton(
             icon: Icon(Icons.chat_bubble_outline),
             onPressed: () {
@@ -79,20 +94,16 @@ class MainListPageView extends HookConsumerWidget {
             Expanded(
               child: mainlistVM.when(
                 data: (data) {
-                  final profiles = data["profiles"] as List<Profile>;
-
                   // 필터링 적용
-                  final filtered = profiles.where((p) {
+                  final filtered = data.where((p) {
                     final genderMatch = selectedGender.value == null
                         ? true
                         : (selectedGender.value!
                               ? p.isMale == true
                               : p.isMale == false);
-
                     final sportMatch =
                         selectedExercise.value == "운동" ||
                         p.sport == selectedExercise.value;
-
                     return genderMatch && sportMatch;
                   }).toList();
 
@@ -106,15 +117,40 @@ class MainListPageView extends HookConsumerWidget {
                     itemCount: filtered.length,
                     itemBuilder: (context, index) {
                       final p = filtered[index];
-                      // 목록 탭하면 대화 페이지로 이동
-                      return GestureDetector(
-                        onTap: () {
+                      // 유저 목록 탭하면 채팅 페이지로 이동 > 나와 상대방 객체 전달
+                      return InkWell(
+                        onTap: () async {
+                          // me를 비동기 호출 후 기다리기
+                          final me = await ref
+                              .read(mainlistPageViewModelProvider.notifier)
+                              .getMyProfile();
+
+                          // 채팅방 생성
+                          final roomId = await ref
+                              .read(mainlistPageViewModelProvider.notifier)
+                              .createChatRoom(me, p);
+                          print("me : $me");
+                          print("p : $p");
+                          print("룸 아이디 : $roomId");
+
+                          if (roomId == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                duration: Duration(seconds: 1),
+                                content: Center(child: Text("채팅방을 만들 수 없습니다")),
+                              ),
+                            );
+                            return;
+                          }
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ChatPageView(
-                                //roomId:
-                                opponentId: p.id!
+                                roomId: roomId,
+                                opponentId: p.id,
+                                // me: me,
+                                // opponent: p,
                               ),
                             ),
                           );
