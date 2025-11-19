@@ -51,42 +51,21 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
                   final p = state.profiles[index];
                   final r = state.chatrooms[index];
 
-                  debugPrint("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-                  debugPrint("!!!!!!!!!!![chatrooms #$index]");
-                  debugPrint("  - id: ${r.id}");
-                 
-                  debugPrint("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-
-                  // debugPrint("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-                  debugPrint("📋 [Profile #$index]");
-                  debugPrint("  - id: ${p.id}");
-                  debugPrint("  - nickname: ${p.nickname}");
-                  // debugPrint("  - isMale: ${p.isMale}");
-                  // debugPrint("  - sport: ${p.sport}");
-                  // debugPrint("  - fullNm: ${p.fullNm}");
-                  // debugPrint("  - emdCd: ${p.emdCd}");
-                  // debugPrint("  - createdAt: ${p.createdAt}");
-                  // debugPrint("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-                  
-                  
-                  return GestureDetector(
+                  return InkWell(
                     onTap: () {
                       if (p.id == null) {
-                        print("⚠️ Profile ID가 null입니다");
                         return;
                       }
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ChatPageView(
-                            opponent: p,
-                            roomId: r.id,
-                          ),
+                          builder: (context) =>
+                              ChatPageView(opponent: p, roomId: r.id),
                         ),
                       );
                     },
                     child: ProfileBox(
-                      userId: p.nickname, // UI 테스트 용도
+                      userId: p.nickname,
                       nickname: p.nickname,
                       isMale: p.isMale,
                       sport: p.sport,

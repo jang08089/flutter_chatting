@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-class Imagebox extends StatelessWidget{
-  double size;
-  Imagebox({super.key, required this.size});
+class Imagebox extends StatelessWidget {
+  const Imagebox({super.key, required this.size});
+
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +12,9 @@ class Imagebox extends StatelessWidget{
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: Colors.grey[300]
+        color: Colors.grey[300],
       ),
-      child: Icon(Icons.person,size: (size-30),),
+      child: Icon(Icons.person, size: (size - 30)),
     );
   }
 }

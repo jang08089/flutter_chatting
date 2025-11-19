@@ -1,20 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_chatting/data/model/profile.dart';
-import 'package:flutter_chatting/utils/device_id.dart';
+import 'package:flutter_chatting/core/device_id.dart';
 
 class ProfileRepository {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  // C 프로필 추가
-  Future<Profile> addProfile(Profile profile) async {
-    final deviceId = await getDeviceId(); // Device Id 가져오기
-    final data = profile.copyWith(createdAt: DateTime.now()).toJson();
-    await firestore
-        .collection('users')
-        .doc(deviceId)
-        .set(data, SetOptions(merge: true)); // profile 있으면 병합, 없으면 생성
-    return Profile.fromJson(data);
-  }
 
   // R 내 프로필 가져오기
   Future<Profile> getMyProfile() async {

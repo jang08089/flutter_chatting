@@ -7,7 +7,6 @@ part 'profile.g.dart';
 abstract class Profile with _$Profile {
   const factory Profile({
     @JsonKey(ignore: true) String? id, // 🔥 문서 ID 저장용 (JSON 변환 제외)
-
     required String nickname,
     @JsonKey(name: 'is_male') required bool isMale,
     required String sport,
@@ -25,7 +24,7 @@ abstract class Profile with _$Profile {
       _$ProfileFromJson(json);
 }
 
-// --- DateTime 변환 함수 ---
+// DateTime 변환 함수
 DateTime _convertToDateTime(String timeString) {
   return DateTime.parse(timeString);
 }

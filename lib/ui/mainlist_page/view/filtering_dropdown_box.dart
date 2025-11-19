@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatting/app_theme.dart';
+import 'package:flutter_chatting/core/app_theme.dart';
 
 class FilteringDropdownButton extends StatelessWidget {
   const FilteringDropdownButton({

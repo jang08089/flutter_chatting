@@ -129,9 +129,6 @@ class MainListPageView extends HookConsumerWidget {
                           final roomId = await ref
                               .read(mainlistPageViewModelProvider.notifier)
                               .createChatRoom(me, p);
-                          print("me : $me");
-                          print("p : $p");
-                          print("룸 아이디 : $roomId");
 
                           if (roomId == null) {
                             ScaffoldMessenger.of(context).showSnackBar(

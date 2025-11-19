@@ -16,7 +16,7 @@ class ChatConversationRepository {
         .map((snapshot) {
           // 스트림 업데이트 확인용 로그
           debugPrint('🔄 스트림 업데이트! 문서 개수: ${snapshot.docs.length}');
-          
+
           final messages = snapshot.docs.map((doc) {
             final data = doc.data();
 
@@ -38,10 +38,6 @@ class ChatConversationRepository {
               createdAt: createdAt,
             );
           }).toList();
-
-          debugPrint(
-            '📨 ChatMessagesStream - roomId: $roomId, messages count: ${messages.length}',
-          );
 
           return messages;
         });
