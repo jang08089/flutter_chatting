@@ -2,7 +2,7 @@
 HEALTH MATE
 </h1>
 <p align="center">
-  <img alt="title" src="./assets/images.splash.webp"/>
+  <img alt="title" src="./assets/images/splash.webp"/>
 </p>
 
 <br/>
@@ -39,31 +39,24 @@ HEALTH MATE
 
 <br/>
 
-## 팀원 구성
+## 프로젝트 개발
 
-| **김시윤** | **박수진** | **안혜린** | **장준혁** |
-| :------: |  :------: | :------: | :------: |
+### 역할 분담
+| **김시윤** | 프로필 페이지, GPS 연동
+| :------: |
+| **박수진** | 팀장 👑 채팅 페이지, Firebase 연동
+| :------: |
+| **안혜린** | 메인 목록 페이지
+| :------: |
+| **장준혁** | 채팅 목록 페이지
+| :------: |
+
 
 ### 프로젝트 일정
 25/11/13 ~ 25/11/20
 
 ### Technologies & Tools
-<img src="https://img.shields.io/badge/VisualStudioCode-007ACC?style=for-the-badge&logo=VisualStudioCode&logoColor=white"/>
-<img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"/> 
-<img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"/> 
-<img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"/> 
-<img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white"/>
-<img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"/>
-
-  
-### 역할 분담
-- **김시윤** : 프로필 페이지
-
-- **박수진** : 👑팀장, 채팅 페이지
-
-- **안혜린** : 메인 목록 페이지
-
-- **장준혁** : 채팅 목록 페이지
+<img src="https://img.shields.io/badge/VisualStudioCode-007ACC?style=for-the-badge&logo=VisualStudioCode&logoColor=white"/> <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"/> <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"/> <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"/> <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white"/> <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"/>
 
 <br/>
 

@@ -16,7 +16,18 @@ class ProfileRepository {
     return Profile.fromJson(data);
   }
 
-  // R 특정 full_nm 값과 같은 프로필만 조회
+  // R 내 프로필 가져오기
+  Future<Profile> getMyProfile() async {
+    final myDeviceId = await getDeviceId();
+    final snapshot = await firestore.collection('users').doc(myDeviceId).get();
+    final data = snapshot.data();
+    if (data == null) {
+      throw Exception("내 프로필이 존재하지 않습니다.");
+    }
+    return Profile.fromJson(data);
+  }
+
+  // R 특정 full_nm 값과 같은 프로필 리스트만 조회
   Future<List<Profile>> getProfilesByFullNm(String fullNm) async {
     try {
       final snapshot = await firestore
@@ -28,22 +39,6 @@ class ProfileRepository {
           .toList();
     } catch (e) {
       return [];
-    }
-  }
-
-  // R device id > full_nm 조회
-  Future<String?> getFullNmByDeviceId(String deviceId) async {
-    try {
-      final docSnapshot = await firestore
-          .collection('users')
-          .doc(deviceId)
-          .get();
-      final data = docSnapshot.data();
-      if (data == null) return null;
-      final fullNm = data['full_nm'] as String?; // full_nm 필드 추출
-      return fullNm;
-    } catch (e) {
-      return null;
     }
   }
 }
