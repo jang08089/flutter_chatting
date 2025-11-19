@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatting/data/model/profile.dart';
 import 'package:flutter_chatting/ui/chat_page/view/chat_page_view.dart';
 import 'package:flutter_chatting/ui/chatlist_page/view/chat_list_view.dart';
 import 'package:flutter_chatting/ui/mainlist_page/view/filtering_dropdown_box.dart';
@@ -17,20 +18,17 @@ class MainListPageView extends HookConsumerWidget {
     final selectedExercise = useState("운동");
 
     // ViewModel 구독 (RiverPod)
-    final mainVM = ref.watch(mainlistPageViewModelProvider);
-    // final addressVM = ref.watch(addressViewModelProvider);
+    final mainlistVM = ref.watch(mainlistPageViewModelProvider);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         leading: SizedBox.shrink(),
         // 내 동네 표시
-        // title: addressVM.when(
-        //   data: (address) => Center(child: Text(address ?? "주소 없음")),
-        //   loading: () => Center(child: CircularProgressIndicator()),
-        //   error: (e, st) => Center(child: Text("주소 조회 실패")),
-        // ),
+        title: mainlistVM.when(
+          data: (data) => Center(child: Text(data["fullNm"])),
+          loading: () => Center(child: CircularProgressIndicator()),
+          error: (e, st) => Center(child: Text("주소 조회 실패")),
+        ),
         actions: [
           // 대화중인 사람 목록으로 이동 버튼
           IconButton(
@@ -47,7 +45,7 @@ class MainListPageView extends HookConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          spacing: 10,
+          spacing: 15,
           children: [
             Row(
               spacing: 20,
@@ -79,8 +77,10 @@ class MainListPageView extends HookConsumerWidget {
               ],
             ),
             Expanded(
-              child: mainVM.when(
-                data: (profiles) {
+              child: mainlistVM.when(
+                data: (data) {
+                  final profiles = data["profiles"] as List<Profile>;
+
                   // 필터링 적용
                   final filtered = profiles.where((p) {
                     final genderMatch = selectedGender.value == null
@@ -92,15 +92,17 @@ class MainListPageView extends HookConsumerWidget {
                     final sportMatch =
                         selectedExercise.value == "운동" ||
                         p.sport == selectedExercise.value;
+
                     return genderMatch && sportMatch;
                   }).toList();
+
                   if (filtered.isEmpty) {
                     return Center(
                       child: Text("검색결과가 없습니다", style: TextStyle(fontSize: 20)),
                     );
                   }
                   // 나와 같은 동네 + 필터링 된 리스트 화면에 뿌리기
-                  return ListView.builder(
+                  return ListView.separated(
                     itemCount: filtered.length,
                     itemBuilder: (context, index) {
                       final p = filtered[index];
@@ -111,7 +113,7 @@ class MainListPageView extends HookConsumerWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ChatPageView(
-                                // profile: filtered[index]
+                                // profile: p
                               ),
                             ),
                           );
@@ -123,6 +125,9 @@ class MainListPageView extends HookConsumerWidget {
                           userId: p.id!,
                         ),
                       );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider();
                     },
                   );
                 },
