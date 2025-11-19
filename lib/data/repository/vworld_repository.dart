@@ -38,17 +38,27 @@ class VworldRepository {
     print(":위성_안테나: [VWorld] API status: $status");
     if (response.statusCode == 200 && status == 'OK' || status == 'ok') {
       final result = resp['result'];
-      if (result == null || result['features'] == null) {
-        print(":경고: [VWorld] result 또는 features 없음");
+      if (result == null) {
+        print(":경고: [VWorld] result 없음");
         return [];
       }
-      final features = result['features'] as List<dynamic>;
+      // :불: featureCollection을 먼저 확인
+      final featureCollection = result['featureCollection'];
+      if (featureCollection == null || featureCollection['features'] == null) {
+        print(":경고: [VWorld] featureCollection 또는 features 없음");
+        return [];
+      }
+      final features = featureCollection['features'] as List<dynamic>;
       print(":위성_안테나: [VWorld] feature 개수: ${features.length}");
       final iterable = features.map((feat) {
         final props = feat['properties'] ?? {};
+        final fullNm = (props['full_nm'] ?? "").toString();
+        final emdCd = (props['emd_cd'] ?? "").toString();
+        // :불: 디버깅용 로그
+        print(":둥근_압핀: [Repository] full_nm: $fullNm, emd_cd: $emdCd");
         return {
-          "fullNm": (props['full_nm'] ?? "").toString(),
-          "emdCd": (props['emd_cd'] ?? "").toString(),
+          "fullNm": fullNm,
+          "emdCd": emdCd,
         };
       });
       return iterable.toList();
@@ -58,6 +68,17 @@ class VworldRepository {
     return [];
   }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
