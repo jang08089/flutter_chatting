@@ -12,14 +12,14 @@ class MainlistPageViewModel extends _$MainlistPageViewModel {
 
   @override
   Future<List> build() async {
-    return await getProfiles();
+    final myProfile = await getMyProfile();
+    return await getProfiles(myProfile.fullNm);
   }
 
   // R 내 full_nm 기반 필터링한 리스트 불러오기
-  Future<List> getProfiles() async {
+  Future<List> getProfiles(String fullNm) async {
     final profiles = await profileRepo.getProfilesByFullNm(
-      // myFullNm // 실제 조회
-      "서울특별시 강동구 천호동", // 더미 데이터
+      fullNm // 실제 조회
     );
     return profiles;
   }
