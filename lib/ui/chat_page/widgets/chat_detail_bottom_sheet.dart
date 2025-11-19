@@ -1,21 +1,17 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:flutter_chatting/core/app_theme.dart';
 import 'package:flutter_chatting/ui/chat_page/view_model/chat_page_view_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ChatDetailBottomSheet extends ConsumerStatefulWidget{
+class ChatDetailBottomSheet extends ConsumerStatefulWidget {
+  ChatDetailBottomSheet(this.bottomPadding, this.roomId);
 
-  ChatDetailBottomSheet(
-    this.bottomPadding,
-    this.roomId,
-  );
-  
   final double bottomPadding;
   final String roomId;
 
   @override
-  ConsumerState<ChatDetailBottomSheet> createState() => _ChatDetailBottomSheetState();
+  ConsumerState<ChatDetailBottomSheet> createState() =>
+      _ChatDetailBottomSheetState();
 }
 
 class _ChatDetailBottomSheetState extends ConsumerState<ChatDetailBottomSheet> {
@@ -25,11 +21,12 @@ class _ChatDetailBottomSheetState extends ConsumerState<ChatDetailBottomSheet> {
     controller.dispose();
     super.dispose();
   }
-  
+
   // 메시지 전송 함수
-  Future<void> onSend() async {  // async 추가 (시간이 걸리는 작업)
+  Future<void> onSend() async {
+    // async 추가 (시간이 걸리는 작업)
     final content = controller.text.trim();
-    
+
     if (content.isEmpty) {
       return;
     }
@@ -37,17 +34,13 @@ class _ChatDetailBottomSheetState extends ConsumerState<ChatDetailBottomSheet> {
     try {
       // ViewModel에서 메시지 전송 함수 가져오기
       final sendMessage = ref.read(sendMessageProvider(widget.roomId));
-      
+
       // 메시지 전송하기
       await sendMessage(content);
-      
+
       // 전송 성공하면 입력창 비우기
       controller.clear();
-      
-      debugPrint('✅ 메시지 전송 성공');
-    } catch (e) {
-      debugPrint('❌ 메시지 전송 실패: $e');
-    }
+    } catch (e) {}
   }
 
   @override
@@ -58,7 +51,7 @@ class _ChatDetailBottomSheetState extends ConsumerState<ChatDetailBottomSheet> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: EdgeInsets.only(left: 30, right: 10, top: 10, bottom: 20),
             child: Row(
               children: [
                 Expanded(
@@ -73,16 +66,12 @@ class _ChatDetailBottomSheetState extends ConsumerState<ChatDetailBottomSheet> {
                     width: 50,
                     height: 50,
                     color: Colors.transparent,
-                    child: Icon(
-                      Icons.send,
-                      color: Theme.of(context).highlightColor,
-                    ),
+                    child: Icon(Icons.send, color: text),
                   ),
-                )
+                ),
               ],
             ),
           ),
-          // 🔥 SizedBox 제거 (padding으로 처리)
         ],
       ),
     );

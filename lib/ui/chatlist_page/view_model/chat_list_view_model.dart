@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_chatting/data/model/chat_room.dart';
 import 'package:flutter_chatting/data/model/profile.dart';
-import 'package:flutter_chatting/utils/device_id.dart';
+import 'package:flutter_chatting/core/device_id.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ChatPageState {
-  List<Profile> profiles;   // 채팅방 상대 프로필들
+  List<Profile> profiles; // 채팅방 상대 프로필들
   List<ChatRoom> chatrooms; // 채팅방 정보
   ChatPageState({required this.profiles, required this.chatrooms});
 }
@@ -22,13 +21,10 @@ class ChatPageViewModel extends Notifier<ChatPageState> {
     //final deviceId = "uid_aaa111";
 
     final deviceId = await getDeviceId();
-    debugPrint("🔥🔥🔥🔥🔥🔥🔥 디바이스 아이디: $deviceId");
     final snapshot = await FirebaseFirestore.instance
         .collection("chat_rooms")
         .where("member_ids", arrayContains: deviceId)
         .get();
-
-    debugPrint("🔥🔥🔥🔥🔥🔥🔥:불: 불러온 문서 수: ${snapshot.docs.length}");
 
     List<ChatRoom> rooms = [];
     List<Profile> profiles = [];
@@ -36,33 +32,19 @@ class ChatPageViewModel extends Notifier<ChatPageState> {
     for (var doc in snapshot.docs) {
       final data = doc.data();
 
-      debugPrint("━━━━━━━━━━━━━━━━━━━━");
-      debugPrint("Document ID: ${doc.id}");
-      debugPrint("전체 데이터: $data");
-
       // 🔸 ChatRoom 모델 변환
-      final room = ChatRoom.fromJson({
-        ...data,
-        "id": doc.id,
-      });
+      final room = ChatRoom.fromJson({...data, "id": doc.id});
       rooms.add(room);
-
-      debugPrint("🔥 memberIds: ${room.memberIds}");
-      debugPrint("🔥 deviceId: $deviceId");
 
       // 🔸 상대방 ID 찾기
       try {
         final otherId = room.memberIds.firstWhere((id) => id != deviceId);
-        debugPrint("🔥 상대방 ID: $otherId");
 
         // 🔸 member_info에서 상대정보 추출
         final rawJson = room.memberInfo[otherId];
-        debugPrint("🔥 memberInfo.keys: ${room.memberInfo.keys}");
-        debugPrint("🔥 rawJson: $rawJson");
 
         // ⚠️ 방어 코드: null 체크
         if (rawJson == null) {
-          debugPrint("⚠ member_info[$otherId] 가 존재하지 않습니다!");
           continue;
         }
 
@@ -70,7 +52,8 @@ class ChatPageViewModel extends Notifier<ChatPageState> {
         final profileJson = Map<String, dynamic>.from(rawJson);
 
         // isMale -> is_male 변환 (Profile 모델이 @JsonKey(name: 'is_male')을 사용)
-        if (profileJson.containsKey('isMale') && !profileJson.containsKey('is_male')) {
+        if (profileJson.containsKey('isMale') &&
+            !profileJson.containsKey('is_male')) {
           profileJson['is_male'] = profileJson['isMale'];
         }
 
@@ -81,33 +64,23 @@ class ChatPageViewModel extends Notifier<ChatPageState> {
           () => DateTime.now().toIso8601String(),
         );
 
-        debugPrint("✔ 보정된 JSON: $profileJson");
-
         // 🔸 Profile 변환 (id는 JSON ignore이므로 copyWith로 추가)
-        final otherProfile = Profile.fromJson(profileJson).copyWith(id: otherId);
+        final otherProfile = Profile.fromJson(
+          profileJson,
+        ).copyWith(id: otherId);
         profiles.add(otherProfile);
-        debugPrint("✔ Profile 추가 완료. 현재 profiles 개수: ${profiles.length}");
       } catch (e) {
-        debugPrint("❌ 오류 발생: $e");
-        debugPrint("❌ 상대방 ID를 찾을 수 없습니다. memberIds: ${room.memberIds}");
         // rooms에는 추가했지만 profiles에는 추가하지 않음
         continue;
       }
     }
 
-    debugPrint("🔥🔥🔥 최종 결과:");
-    debugPrint("  - chatrooms 개수: ${rooms.length}");
-    debugPrint("  - profiles 개수: ${profiles.length}");
-
     // 🔥 상태 업데이트
-    state = ChatPageState(
-      profiles: profiles,
-      chatrooms: rooms,
-    );
+    state = ChatPageState(profiles: profiles, chatrooms: rooms);
   }
 }
 
 final ChatListPageViewModelProvider =
     NotifierProvider<ChatPageViewModel, ChatPageState>(() {
-  return ChatPageViewModel();
-});
+      return ChatPageViewModel();
+    });

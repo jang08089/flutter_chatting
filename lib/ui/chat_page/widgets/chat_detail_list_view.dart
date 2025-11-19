@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chatting/ui/chat_page/view_model/chat_conversation_view_model.dart';
 import 'package:flutter_chatting/ui/chat_page/widgets/chat_detail_receive_item.dart';
 import 'package:flutter_chatting/ui/chat_page/widgets/chat_detail_send_item.dart';
-import 'package:flutter_chatting/utils/device_id.dart';
+import 'package:flutter_chatting/core/device_id.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ChatDetailListView extends ConsumerStatefulWidget {
@@ -40,7 +40,6 @@ class _ChatDetailListViewState extends ConsumerState<ChatDetailListView> {
         });
       }
     } catch (e) {
-      debugPrint('❌ deviceId 가져오기 실패: $e');
       // 예외 발생 시 기본값 설정
       if (mounted) {
         setState(() {
@@ -97,13 +96,6 @@ class _ChatDetailListViewState extends ConsumerState<ChatDetailListView> {
     final inputHeight = 70.0;
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    // 🔥 roomId가 변경되면 초기화
-    // if (_previousRoomId != null && _previousRoomId != widget.roomId) {
-    //   _previousMessageCount = 0;
-    //   _previousKeyboardHeight = 0;
-    // }
-    // _previousRoomId = widget.roomId;
-
     return messagesAsync.when(
       data: (messages) {
         // 🔥 처음 메시지가 로드될 때 스크롤
@@ -111,7 +103,7 @@ class _ChatDetailListViewState extends ConsumerState<ChatDetailListView> {
           _scrollToBottomWithRetry();
           _previousMessageCount = messages.length;
         }
-        
+
         // 키보드 높이가 변경될 때마다 스크롤 조정
         if (keyboardHeight != _previousKeyboardHeight) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -121,7 +113,7 @@ class _ChatDetailListViewState extends ConsumerState<ChatDetailListView> {
           });
           _previousKeyboardHeight = keyboardHeight;
         }
-        
+
         // 메시지가 추가될 때 스크롤
         if (messages.length > _previousMessageCount) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -146,10 +138,10 @@ class _ChatDetailListViewState extends ConsumerState<ChatDetailListView> {
           itemCount: messages.length,
           itemBuilder: (context, index) {
             final msg = messages[index];
-            
+
             // senderId와 내 deviceId 비교
             final isMyMessage = msg.senderId == _myDeviceId;
-            
+
             // 내가 보낸 메시지면 오른쪽 (SendItem), 받은 메시지면 왼쪽 (ReceiveItem)
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -165,10 +157,8 @@ class _ChatDetailListViewState extends ConsumerState<ChatDetailListView> {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (e, st) {
-        debugPrint('❌ 메시지 로드 오류: $e');
         return Center(child: Text('Error: $e'));
       },
-      
     );
   }
 }

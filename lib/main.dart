@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_chatting/app_theme.dart';
-import 'package:flutter_chatting/firebase_options.dart';
-import 'package:flutter_chatting/ui/chat_page/view/chat_page_view.dart';
-import 'package:flutter_chatting/ui/root_page.dart';
+import 'package:flutter_chatting/core/app_theme.dart';
+import 'package:flutter_chatting/core/firebase_options.dart';
 import 'package:flutter_chatting/ui/splash_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

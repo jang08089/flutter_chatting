@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MaleIcon extends StatelessWidget {
-  double size;
-  MaleIcon({super.key, required this.size});
+  const MaleIcon({super.key, required this.size});
+
+  final double size;
 
   @override
   Widget build(BuildContext context) {

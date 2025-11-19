@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatting/core/app_theme.dart';
+import 'package:flutter_chatting/widgets/Icons/female_icon.dart';
+import 'package:flutter_chatting/widgets/Icons/male_icon.dart';
 
 class ChatDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ChatDetailAppBar({
@@ -25,54 +28,26 @@ class ChatDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.arrow_back, size: 28),
         onPressed: () => Navigator.of(context).pop(),
       ),
-      title: Column(
+      title: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(width: 20),
           // 닉네임
-          Text(
-            nickname,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          Text(nickname, style: const TextStyle(fontSize: 23)),
           const SizedBox(height: 4),
-          // 성별 + 운동
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // 성별
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.amber,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  gender,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 6),
-              // 운동
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  sport,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
-                ),
-              ),
-            ],
+
+          // 성별
+          if (gender == "남자") MaleIcon(size: 30),
+          if (gender == "여자") FemaleIcon(size: 30),
+          const SizedBox(width: 6),
+          // 운동
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: point,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(sport, style: TextStyle(color: text, fontSize: 15)),
           ),
         ],
       ),
@@ -80,6 +55,5 @@ class ChatDetailAppBar extends StatelessWidget implements PreferredSizeWidget {
         SizedBox(width: 56), // 뒤로가기 IconButton width=56
       ],
     );
-  
   }
 }

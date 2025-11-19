@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chatting/app_theme.dart';
+import 'package:flutter_chatting/core/app_theme.dart';
 import 'package:flutter_chatting/widgets/Icons/female_icon.dart';
 import 'package:flutter_chatting/widgets/Icons/male_icon.dart';
 import 'package:flutter_chatting/widgets/imagebox.dart';
@@ -10,13 +10,13 @@ class ProfileBox extends StatelessWidget {
     required this.nickname,
     required this.isMale,
     required this.sport,
-    required this.userId, // 🔥 추가됨
+    required this.userId,
   });
 
   final String nickname;
   final bool isMale;
   final String sport;
-  final String userId; // 🔥 추가됨
+  final String userId;
 
   @override
   Widget build(BuildContext context) {

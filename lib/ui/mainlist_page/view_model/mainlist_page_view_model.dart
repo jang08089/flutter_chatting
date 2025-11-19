@@ -18,9 +18,7 @@ class MainlistPageViewModel extends _$MainlistPageViewModel {
 
   // R 내 full_nm 기반 필터링한 리스트 불러오기
   Future<List> getProfiles(String fullNm) async {
-    final profiles = await profileRepo.getProfilesByFullNm(
-      fullNm // 실제 조회
-    );
+    final profiles = await profileRepo.getProfilesByFullNm(fullNm);
     return profiles;
   }
 
