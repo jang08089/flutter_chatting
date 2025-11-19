@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chatting/ui/chat_page/view/chat_page_view.dart';
 import 'package:flutter_chatting/ui/chatlist_page/view/chat_list_view.dart';
-import 'package:flutter_chatting/ui/mainlist_page/view/filtering_dropdown_box.dart';
+import 'package:flutter_chatting/ui/mainlist_page/widgets/filtering_dropdown_box.dart';
 import 'package:flutter_chatting/ui/mainlist_page/view_model/mainlist_page_view_model.dart';
 import 'package:flutter_chatting/widgets/profile_box.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
