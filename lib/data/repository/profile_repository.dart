@@ -24,7 +24,7 @@ class ProfileRepository {
     if (data == null) {
       throw Exception("내 프로필이 존재하지 않습니다.");
     }
-    return Profile.fromJson(data);
+    return Profile.fromJson(data).copyWith(id: snapshot.id);
   }
 
   // R 특정 full_nm 값과 같은 프로필 리스트만 조회

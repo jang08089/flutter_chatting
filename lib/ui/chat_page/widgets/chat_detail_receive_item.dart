@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_chatting/data/model/chat_messages.dart';
+import 'package:flutter_chatting/widgets/imagebox.dart';
 import 'package:intl/intl.dart';
 
 class ChatDetailReceiveItem extends StatelessWidget{
@@ -25,7 +26,9 @@ class ChatDetailReceiveItem extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start, 
       children: [
+        Imagebox(size: 40),
         SizedBox(width: 8),
         Expanded(
           child: Column(

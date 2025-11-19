@@ -53,16 +53,14 @@ class _ChatDetailBottomSheetState extends ConsumerState<ChatDetailBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70 + widget.bottomPadding,
       color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Row(
               children: [
-                //Row내에서 TextField 사용할때 가로길이가 정해지지 않으면 에러
-                //Expanded로 감싸기
                 Expanded(
                   child: TextField(
                     controller: controller,
@@ -84,7 +82,7 @@ class _ChatDetailBottomSheetState extends ConsumerState<ChatDetailBottomSheet> {
               ],
             ),
           ),
-          SizedBox(height: widget.bottomPadding),
+          // 🔥 SizedBox 제거 (padding으로 처리)
         ],
       ),
     );

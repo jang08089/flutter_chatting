@@ -79,8 +79,8 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ChatPageView(
+                            opponent: p,
                             roomId: r.id,
-                            opponentId: p.id!
                           ),
                         ),
                       );

@@ -20,6 +20,9 @@ class _ChatDetailListViewState extends ConsumerState<ChatDetailListView> {
   String? _myDeviceId; // 내 deviceId 저장
   bool _isLoadingDeviceId = true; // 로딩 상태 추가
 
+  //이전 키보드 높이 저장
+  double _previousKeyboardHeight = 0;
+
   @override
   void initState() {
     super.initState();
@@ -65,58 +68,107 @@ class _ChatDetailListViewState extends ConsumerState<ChatDetailListView> {
     }
   }
 
+  // 🔥 스크롤을 여러 번 시도하는 함수
+  void _scrollToBottomWithRetry() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _scrollController.hasClients) {
+        _scrollToBottom();
+      } else {
+        // 🔥 아직 빌드되지 않았으면 다시 시도
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (mounted && _scrollController.hasClients) {
+            _scrollToBottom();
+          } else {
+            // 🔥 한 번 더 시도
+            Future.delayed(const Duration(milliseconds: 100), () {
+              if (mounted && _scrollController.hasClients) {
+                _scrollToBottom();
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final messagesAsync = ref.watch(chatMessagesStreamProvider(widget.roomId));
+    final inputHeight = 70.0;
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    final bottomSheetHeight = 70.0 + MediaQuery.of(context).padding.bottom;
+    // 🔥 roomId가 변경되면 초기화
+    // if (_previousRoomId != null && _previousRoomId != widget.roomId) {
+    //   _previousMessageCount = 0;
+    //   _previousKeyboardHeight = 0;
+    // }
+    // _previousRoomId = widget.roomId;
 
-    return Expanded(
-      child: messagesAsync.when(
-        data: (messages) {
-          // 메시지가 추가되었는지 확인
-          if (messages.length > _previousMessageCount) {
-            // 빌드가 완료된 후 스크롤 이동
-            WidgetsBinding.instance.addPostFrameCallback((_) {
+    return messagesAsync.when(
+      data: (messages) {
+        // 🔥 처음 메시지가 로드될 때 스크롤
+        if (_previousMessageCount == 0 && messages.isNotEmpty) {
+          _scrollToBottomWithRetry();
+          _previousMessageCount = messages.length;
+        }
+        
+        // 키보드 높이가 변경될 때마다 스크롤 조정
+        if (keyboardHeight != _previousKeyboardHeight) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && _scrollController.hasClients) {
               _scrollToBottom();
-            });
-            _previousMessageCount = messages.length;
-          }
+            }
+          });
+          _previousKeyboardHeight = keyboardHeight;
+        }
+        
+        // 메시지가 추가될 때 스크롤
+        if (messages.length > _previousMessageCount) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted && _scrollController.hasClients) {
+              _scrollToBottom();
+            }
+          });
+          _previousMessageCount = messages.length;
+        }
 
-          // deviceId가 아직 로드 중이면 로딩 표시
-          if (_isLoadingDeviceId || _myDeviceId == null) {
-            return const Center(child: CircularProgressIndicator());
-          }
+        if (_isLoadingDeviceId || _myDeviceId == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          return ListView.builder(
-            controller: _scrollController,
-            padding: EdgeInsets.only(bottom: bottomSheetHeight),
-            itemCount: messages.length,
-            itemBuilder: (context, index) {
-              final msg = messages[index];
-              
-              // senderId와 내 deviceId 비교
-              final isMyMessage = msg.senderId == _myDeviceId;
-              
-              // 내가 보낸 메시지면 오른쪽 (SendItem), 받은 메시지면 왼쪽 (ReceiveItem)
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: isMyMessage
-                    ? Align(
-                        alignment: Alignment.centerRight,
-                        child: ChatDetailSendItem(message: msg),
-                      )
-                    : ChatDetailReceiveItem(message: msg),
-              );
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) {
-          debugPrint('❌ 메시지 로드 오류: $e');
-          return Center(child: Text('Error: $e'));
-        },
-      ),
+        return ListView.builder(
+          controller: _scrollController,
+          padding: EdgeInsets.only(
+            left: 8,
+            right: 8,
+            bottom: keyboardHeight <= 0 ? 0 : inputHeight,
+          ),
+          itemCount: messages.length,
+          itemBuilder: (context, index) {
+            final msg = messages[index];
+            
+            // senderId와 내 deviceId 비교
+            final isMyMessage = msg.senderId == _myDeviceId;
+            
+            // 내가 보낸 메시지면 오른쪽 (SendItem), 받은 메시지면 왼쪽 (ReceiveItem)
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: isMyMessage
+                  ? Align(
+                      alignment: Alignment.centerRight,
+                      child: ChatDetailSendItem(message: msg),
+                    )
+                  : ChatDetailReceiveItem(message: msg),
+            );
+          },
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, st) {
+        debugPrint('❌ 메시지 로드 오류: $e');
+        return Center(child: Text('Error: $e'));
+      },
+      
     );
   }
 }
