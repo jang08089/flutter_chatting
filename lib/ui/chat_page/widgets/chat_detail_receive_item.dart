@@ -11,10 +11,15 @@ class ChatDetailReceiveItem extends StatelessWidget{
 
   final ChatMessages message;
 
-  // 날짜 포맷팅 함수
+  // 날짜 포맷팅 함수 (로케일 없이)
   String _formatDateTime(DateTime dateTime) {
-    final dateFormat = DateFormat('yyyy년 MM월 dd일 a hh:mm', 'ko_KR');
-    return dateFormat.format(dateTime);
+    // 로케일 없이 간단한 포맷 사용
+    final hour = dateTime.hour;
+    final minute = dateTime.minute.toString().padLeft(2, '0');
+    final amPm = hour < 12 ? '오전' : '오후';
+    final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
+    
+    return '${dateTime.year}년 ${dateTime.month}월 ${dateTime.day}일 $amPm $displayHour:$minute';
   }
 
   @override

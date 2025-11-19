@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chatting/ui/chat_page/view/chat_page_view.dart';
 import 'package:flutter_chatting/ui/chatlist_page/view_model/chat_list_view_model.dart';
 import 'package:flutter_chatting/widgets/profile_box.dart';
 import 'package:flutter_chatting/ui/mainlist_page/view/mainlist_page_view.dart';
@@ -48,9 +49,42 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
                 padding: const EdgeInsets.only(bottom: 150),
                 itemBuilder: (context, index) {
                   final p = state.profiles[index];
+                  final r = state.chatrooms[index];
 
+                  debugPrint("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                  debugPrint("!!!!!!!!!!![chatrooms #$index]");
+                  debugPrint("  - id: ${r.id}");
+                 
+                  debugPrint("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+
+                  // debugPrint("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                  debugPrint("📋 [Profile #$index]");
+                  debugPrint("  - id: ${p.id}");
+                  debugPrint("  - nickname: ${p.nickname}");
+                  // debugPrint("  - isMale: ${p.isMale}");
+                  // debugPrint("  - sport: ${p.sport}");
+                  // debugPrint("  - fullNm: ${p.fullNm}");
+                  // debugPrint("  - emdCd: ${p.emdCd}");
+                  // debugPrint("  - createdAt: ${p.createdAt}");
+                  // debugPrint("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+                  
+                  
                   return GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      if (p.id == null) {
+                        print("⚠️ Profile ID가 null입니다");
+                        return;
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPageView(
+                            roomId: r.id,
+                            opponentId: p.id!
+                          ),
+                        ),
+                      );
+                    },
                     child: ProfileBox(
                       userId: p.nickname, // UI 테스트 용도
                       nickname: p.nickname,

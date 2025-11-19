@@ -11,9 +11,9 @@ class ChatPageView extends ConsumerWidget{
   const ChatPageView({
     super.key,
     //required this.roomId,
-    //required this.opponentId,
+    required this.opponentId,
     this.roomId = 'uid_aaa111_uid_bbb222',  // 테스트
-    this.opponentId = 'uid_bbb222',  // 테스트
+    //this.opponentId = 'uid_bbb222',  // 테스트
   });
 
   final String roomId;
@@ -36,7 +36,7 @@ class ChatPageView extends ConsumerWidget{
         debugPrint('  - nickname: ${opponentInfo?.nickname}');
         debugPrint('  - gender: ${opponentInfo?.isMale}');
         debugPrint('  - sport: ${opponentInfo?.sport}');
-        return const SizedBox.shrink(); // UI에는 영향 없음
+        return const SizedBox.shrink();
       },
       loading: () {
         debugPrint('🔥 ChatPageView - 로딩 중...');
@@ -65,7 +65,7 @@ class ChatPageView extends ConsumerWidget{
             ),
             bottomSheet: ChatDetailBottomSheet(
               MediaQuery.of(context).padding.bottom,
-              roomId,  // 이 줄 추가 - roomId 전달
+              roomId,
             ),
             body: Column(
               children: [

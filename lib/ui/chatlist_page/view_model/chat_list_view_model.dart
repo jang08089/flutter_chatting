@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chatting/data/model/chat_room.dart';
 import 'package:flutter_chatting/data/model/profile.dart';
+import 'package:flutter_chatting/utils/device_id.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ChatPageState {
@@ -19,6 +20,8 @@ class ChatPageViewModel extends Notifier<ChatPageState> {
   /// 🔥 Firestore에서 채팅 목록 불러오기
   Future<void> getChattings() async {
     final deviceId = "uid_aaa111";
+
+    //final deviceId = await getDeviceId();
 
     final snapshot = await FirebaseFirestore.instance
         .collection("chat_rooms")
@@ -69,7 +72,8 @@ class ChatPageViewModel extends Notifier<ChatPageState> {
       debugPrint("✔ 보정된 JSON: $profileJson");
 
       // 🔸 Profile 변환
-      final otherProfile = Profile.fromJson(profileJson);
+      //final otherProfile = Profile.fromJson(profileJson);
+      final otherProfile = Profile.fromJson(profileJson).copyWith(id: otherId);
       profiles.add(otherProfile);
     }
 
